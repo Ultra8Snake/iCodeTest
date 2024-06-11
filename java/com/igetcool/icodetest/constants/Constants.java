@@ -53,7 +53,7 @@ public class Constants {
 
     public static final String DEFAULT_COMMON_PACKAGE_NAME = "com.igetcool.commons";
     public static final String DEFAULT_COMMON_CLASS_NAME = "WebMvcBase";
-    
+
     public static final String DEFAULT_COMMON_CLASS_BODY_4 = "package %s;/*变量1*/\n" +
             "\n" +
             "import %s;/*变量2*/\n" +
@@ -62,21 +62,21 @@ public class Constants {
             "import org.junit.runner.RunWith;\n" +
             "import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;\n" +
             "\n" +
+            "//import org.springframework.test.context.web.WebAppConfiguration;\n" +
+            "//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;\n" +
             "import org.springframework.beans.factory.annotation.Autowired;\n" +
-            "import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;\n" +
             "import org.springframework.boot.test.context.SpringBootTest;\n" +
             "import org.springframework.test.context.ActiveProfiles;\n" +
-            "import org.springframework.test.context.web.WebAppConfiguration;\n" +
             "import org.springframework.test.web.servlet.MockMvc;\n" +
             "import org.springframework.test.web.servlet.result.MockMvcResultMatchers;\n" +
             "import org.springframework.test.web.servlet.setup.MockMvcBuilders;\n" +
             "import org.springframework.web.context.WebApplicationContext;\n" +
             "\n" +
+            "//@WebAppConfiguration\n" +
+            "//@AutoConfigureMockMvc\n" +
             "@ActiveProfiles(\"dev\")\n" +
-            "@WebAppConfiguration\n" +
             "@RunWith(SpringJUnit4ClassRunner.class)\n" +
             "@SpringBootTest(classes = %s.class)/*变量3*/\n" +
-            "@AutoConfigureMockMvc\n" +
             "/**\n" +
             " * 测试公共类（容器初始化类）\n" +
             " * \n" +
@@ -110,21 +110,21 @@ public class Constants {
             "import org.junit.jupiter.api.extension.ExtendWith;\n" +
             "import org.springframework.test.context.junit.jupiter.SpringExtension;\n" +
             "\n" +
+            "//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;\n" +
+            "//import org.springframework.test.context.web.WebAppConfiguration;\n" +
             "import org.springframework.beans.factory.annotation.Autowired;\n" +
-            "import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;\n" +
             "import org.springframework.boot.test.context.SpringBootTest;\n" +
             "import org.springframework.test.context.ActiveProfiles;\n" +
-            "import org.springframework.test.context.web.WebAppConfiguration;\n" +
             "import org.springframework.test.web.servlet.MockMvc;\n" +
             "import org.springframework.test.web.servlet.result.MockMvcResultMatchers;\n" +
             "import org.springframework.test.web.servlet.setup.MockMvcBuilders;\n" +
             "import org.springframework.web.context.WebApplicationContext;\n" +
             "\n" +
+            "//@WebAppConfiguration\n" +
+            "//@AutoConfigureMockMvc\n" +
             "@ActiveProfiles(\"dev\")\n" +
-            "@WebAppConfiguration\n" +
             "@ExtendWith(SpringExtension.class)\n" +
             "@SpringBootTest(classes = %s.class)/*变量3*/\n" +
-            "@AutoConfigureMockMvc\n" +
             "/**\n" +
             " * 测试公共类（容器初始化类）\n" +
             " * \n" +
@@ -151,6 +151,6 @@ public class Constants {
             "}";
 
     private Constants() {
-        throw new IllegalStateException("Constants 不能实例化");
+        throw new IllegalStateException("Constants cannot be instantiated.");
     }
 }

@@ -12,17 +12,40 @@ import com.intellij.psi.PsiType;
 
 import java.util.*;
 
+/**
+ * MockMvcRequestStyle 类扩展了 AbstractRequestStyle 类，并实现了基于 MockMvc 的请求风格。
+ * 此类用于生成与 Spring MockMvc 框架兼容的测试代码，特别是用于模拟 HTTP 请求和验证控制器方法的响应。
+ */
 public class MockMvcRequestStyle extends AbstractRequestStyle {
+
+    /**
+     * 获取请求风格的标识符。
+     *
+     * @return 返回请求风格的字符串表示，对于 MockMvcRequestStyle 总是返回 Constants.DEFAULT_REQUEST_STYLE_MOCK。
+     */
     @Override
     public String getStyle() {
         return Constants.DEFAULT_REQUEST_STYLE_MOCK;
     }
 
+    /**
+     * 获取方法集合所需的导入，仅包含调用方法时所需的类型。
+     *
+     * @param methodCoreBases 包含方法核心信息的列表
+     * @return 返回一个包含所有必需导入的 PsiType 的集合
+     */
     @Override
     public Set<PsiType> getMethodImportSet(List<MethodCoreBase> methodCoreBases) {
         return new HashSet<>(callMethodImportSet(methodCoreBases));
     }
 
+    /**
+     * 生成测试类的字段定义，包括模拟对象。
+     *
+     * @param classFields   类的字段列表
+     * @param classMetaInfo 类的元信息
+     * @return 返回测试类字段定义的代码字符串
+     */
     @Override
     public String generateTestClassField(List<PsiField> classFields, ClassMetaInfo classMetaInfo) {
         final StringBuilder result = new StringBuilder();
@@ -33,6 +56,13 @@ public class MockMvcRequestStyle extends AbstractRequestStyle {
         return result.toString();
     }
 
+    /**
+     * 生成测试类的方法定义，包括 MockMvc 的测试逻辑。
+     *
+     * @param methodCoreBases 包含方法核心信息的列表
+     * @param classMetaInfo   类的元信息
+     * @return 返回测试类方法定义的代码字符串
+     */
     @Override
     public String generateTestClassMethod(List<MethodCoreBase> methodCoreBases, ClassMetaInfo classMetaInfo) {
         final StringBuilder result = new StringBuilder();
@@ -65,6 +95,13 @@ public class MockMvcRequestStyle extends AbstractRequestStyle {
         return result.toString();
     }
 
+    /**
+     * 生成使用 MockMvc 执行请求的方法调用代码。
+     *
+     * @param methodMetaInfo 方法的元信息
+     * @param classMetaInfo  类的元信息
+     * @return 返回使用 MockMvc 执行请求的代码字符串
+     */
     @Override
     public String callMethod(MethodMetaInfo methodMetaInfo, ClassMetaInfo classMetaInfo) {
         StringBuilder result = new StringBuilder();
@@ -100,6 +137,12 @@ public class MockMvcRequestStyle extends AbstractRequestStyle {
         return result.toString();
     }
 
+    /**
+     * 获取调用方法时所需的导入集合。
+     *
+     * @param methodCoreBases 包含方法核心信息的列表
+     * @return 返回一个包含所有必需导入的 PsiType 的集合
+     */
     private Set<PsiType> callMethodImportSet(List<MethodCoreBase> methodCoreBases) {
         final Set<PsiType> result = new HashSet<>();
         for (MethodCoreBase methodCoreBase : methodCoreBases) {

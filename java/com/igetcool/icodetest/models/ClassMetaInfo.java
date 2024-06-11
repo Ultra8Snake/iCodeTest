@@ -17,8 +17,11 @@ public class ClassMetaInfo {
     private List<PsiField> classFields;
     private List<PsiMethod> classMethods;
 
+    // 最终的输出路径:
     private String finalAbsolutePath;
+    // 最终的输出文件名称: XxxTest
     private String finalClassName;
+    // 最终的全路径
     private String finalFullPath;
 
     public String getAbsolutePath() {

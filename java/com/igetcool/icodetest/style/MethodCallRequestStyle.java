@@ -14,13 +14,27 @@ import com.intellij.psi.util.PsiUtil;
 
 import java.util.*;
 
+/**
+ * MethodCallRequestStyle 类实现了 AbstractRequestStyle 抽象类，并提供了基于方法调用的请求风格。
+ * 此类用于生成基于方法调用的测试代码，包括测试类的字段和方法定义，以及方法调用的实现。
+ */
 public class MethodCallRequestStyle extends AbstractRequestStyle {
-
+    /**
+     * 获取请求风格的标识符。
+     *
+     * @return 返回请求风格的字符串表示，对于 MethodCallRequestStyle 总是返回 Constants.DEFAULT_REQUEST_STYLE_CALL。
+     */
     @Override
     public String getStyle() {
         return Constants.DEFAULT_REQUEST_STYLE_CALL;
     }
 
+    /**
+     * 获取方法集合所需的导入。
+     *
+     * @param methodCoreBases 包含方法核心信息的列表
+     * @return 返回一个包含所有必需导入的 PsiType 的集合
+     */
     @Override
     public Set<PsiType> getMethodImportSet(List<MethodCoreBase> methodCoreBases) {
         Set<PsiType> importSet = new HashSet<>();
@@ -29,6 +43,13 @@ public class MethodCallRequestStyle extends AbstractRequestStyle {
         return importSet;
     }
 
+    /**
+     * 生成测试类的字段定义。
+     *
+     * @param classFields   类的字段列表
+     * @param classMetaInfo 类的元信息
+     * @return 返回测试类字段定义的代码字符串
+     */
     @Override
     public String generateTestClassField(List<PsiField> classFields, ClassMetaInfo classMetaInfo) {
         final StringBuilder result = new StringBuilder();
@@ -45,6 +66,13 @@ public class MethodCallRequestStyle extends AbstractRequestStyle {
         return result.toString();
     }
 
+    /**
+     * 生成测试类的方法定义。
+     *
+     * @param methodCoreBases 包含方法核心信息的列表
+     * @param classMetaInfo   类的元信息
+     * @return 返回测试类方法定义的代码字符串
+     */
     @Override
     public String generateTestClassMethod(List<MethodCoreBase> methodCoreBases, ClassMetaInfo classMetaInfo) {
         final StringBuilder result = new StringBuilder();
@@ -76,6 +104,13 @@ public class MethodCallRequestStyle extends AbstractRequestStyle {
         return result.toString();
     }
 
+    /**
+     * 生成调用方法的代码。
+     *
+     * @param methodMetaInfo 方法的元信息
+     * @param classMetaInfo  类的元信息
+     * @return 返回调用方法的代码字符串
+     */
     @Override
     public String callMethod(MethodMetaInfo methodMetaInfo, ClassMetaInfo classMetaInfo) {
         StringBuilder result = new StringBuilder();
@@ -86,22 +121,26 @@ public class MethodCallRequestStyle extends AbstractRequestStyle {
         if (!argsNameAndTypes.isEmpty()) {
             for (Map.Entry<String, PsiType> entry : argsNameAndTypes.entrySet()) {
                 PsiType eachParamPsiType = entry.getValue();
+                // 如果不是自定义类型，直接取得类型的默认值即可
                 if (TypeClassifier.notCustomType(eachParamPsiType)) {
                     methodArgumentsTypeList.add(
-                            TypeClassifier.isStringType(eachParamPsiType)
+                            TypeClassifier.isStringType(eachParamPsiType) // String类型直接给 "0"
                                     ? "\"0\""
                                     : TypeClassifier.getDefaultValue(eachParamPsiType)
                     );
                 } else {
                     if (TypeClassifier.isInterfaceOrAbstractClassOrEnum(eachParamPsiType)) {
+                        // 如果是接口、抽象类或枚举，参数直接给“null”即可
                         methodArgumentsTypeList.add("null");
                     } else {
-                        PsiClass psiClass = PsiUtil.resolveClassInType(eachParamPsiType);
+                        // 否则认为是自定义类型，自定义类型可以使用 new 关键字（TODO 风险：没有无参构造）
+                        PsiClass psiClass = PsiUtil.resolveClassInType(eachParamPsiType);// 主要是为了取 类名的精简名字
                         if (psiClass != null) {
                             String instanceName = "arg" + psiClass.getName();
                             methodArgumentsTypeList.add(instanceName);
                             result.append(fieldObjectInstance(eachParamPsiType, instanceName));
                         } else {
+                            // 不应该出现的情况，防止丢参数，给一个默认值（TODO 风险：上述判断不严谨会出现此情况）
                             methodArgumentsTypeList.add("null");
                         }
                     }
@@ -144,6 +183,12 @@ public class MethodCallRequestStyle extends AbstractRequestStyle {
         return result.toString();
     }
 
+    /**
+     * 获取方法参数和返回类型所需的导入。
+     *
+     * @param methodCoreBases 包含方法核心信息的列表
+     * @return 返回一个包含所有必需导入的 PsiType 的集合
+     */
     private Set<PsiType> originMethodImportSet(List<MethodCoreBase> methodCoreBases) {
         final Set<PsiType> result = new HashSet<>();
         for (MethodCoreBase methodCoreBase : methodCoreBases) {
@@ -161,6 +206,12 @@ public class MethodCallRequestStyle extends AbstractRequestStyle {
         return result;
     }
 
+    /**
+     * 获取调用方法时所需的导入。
+     *
+     * @param methodCoreBases 包含方法核心信息的列表
+     * @return 返回一个包含所有必需导入的 PsiType 的集合
+     */
     private Set<PsiType> callMethodImportSet(List<MethodCoreBase> methodCoreBases) {
         final Set<PsiType> result = new HashSet<>();
         for (MethodCoreBase methodCoreBase : methodCoreBases) {

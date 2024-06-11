@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class MethodMetaInfo {
 
-    private String methodName;
+    private final String methodName;
 
     private String requestUri;
 

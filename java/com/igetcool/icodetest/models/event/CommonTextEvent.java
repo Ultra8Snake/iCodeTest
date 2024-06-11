@@ -1,4 +1,4 @@
-package com.igetcool.icodetest.models;
+package com.igetcool.icodetest.models.event;
 
 public class CommonTextEvent {
 

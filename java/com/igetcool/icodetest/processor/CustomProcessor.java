@@ -1,9 +1,7 @@
-package com.igetcool.icodetest.creator;
+package com.igetcool.icodetest.processor;
 
-import com.igetcool.icodetest.popup.CustomMethodListPopup;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.igetcool.icodetest.dialog.MethodListDialog;
+import com.igetcool.icodetest.enums.OperateType;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -15,20 +13,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CustomUnitTestCreator extends AnAction {
+public class CustomProcessor extends AbstractProcessor {
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
-        Project project = e.getProject();
-        if (project == null) {
-            return;
-        }
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
+    public OperateType operateType() {
+        return OperateType.CUSTOM;
+    }
+
+
+    @Override
+    public void process(@NotNull Project project, @NotNull Editor editor) {
         FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
-        VirtualFile virtualFile = null;
-        if (editor != null) {
-            virtualFile = fileDocumentManager.getFile(editor.getDocument());
-        }
+        VirtualFile virtualFile = fileDocumentManager.getFile(editor.getDocument());
         if (virtualFile == null) {
             return;
         }
@@ -44,8 +40,13 @@ public class CustomUnitTestCreator extends AnAction {
         for (PsiClass psiClass : psiJavaFile.getClasses()) {
             PsiMethod[] classMethods = psiClass.getMethods();
             methods.addAll(Arrays.asList(classMethods));
-            new CustomMethodListPopup(project, editor.getDocument(), psiJavaFile, methods).show();
+            MethodListDialog dialog = new MethodListDialog(
+                    project,
+                    editor.getDocument(),
+                    psiJavaFile,
+                    methods
+            );
+            dialog.show(this);
         }
     }
-
 }
